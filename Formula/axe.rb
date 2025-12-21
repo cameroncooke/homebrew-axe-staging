@@ -15,13 +15,7 @@ class Axe < Formula
 
   def post_install
     ohai "Ad-hoc signing AXe binary and frameworks for execution"
-    machos = Dir.glob("#{libexec}/**/*").select do |f|
-      File.file?(f) && `file -b "#{f}"`.include?("Mach-O")
-    end
-
-    machos.each do |path|
-      system "codesign", "--force", "--sign", "-", path
-    end
+    system "codesign", "--force", "--sign", "-", "#{libexec}/axe"
 
     Dir.glob("#{libexec}/Frameworks/*.framework").each do |framework|
       system "codesign", "--force", "--sign", "-", "--deep", framework
