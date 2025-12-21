@@ -16,13 +16,14 @@ class Axe < Formula
   def post_install
     ohai "Ad-hoc signing AXe binary and frameworks for execution"
     # Sign the main binary.
-    system "codesign", "--force", "--sign", "-", "#{libexec}/axe"
+    system("codesign", "--force", "--sign", "-", "--timestamp=none", "#{libexec}/axe") || opoo("codesign failed for axe")
 
-    # Sign all Mach-O files under Frameworks/ individually (avoids bundle ambiguity).
-    Dir.glob("#{libexec}/Frameworks/**/*").each do |path|
-      next unless File.file?(path)
-      next unless `file -b "#{path}"`.include?("Mach-O")
-      system "codesign", "--force", "--sign", "-", path
+    # Sign framework binaries directly (avoid bundle ambiguity); ignore errors but log.
+    Dir.glob("#{libexec}/Frameworks/*.framework").each do |framework|
+      name = File.basename(framework, ".framework")
+      binary = Dir["#{framework}/Versions/*/#{name}"].first
+      next unless binary
+      system("codesign", "--force", "--sign", "-", "--timestamp=none", binary) || opoo("codesign failed for #{binary}")
     end
   end
 
