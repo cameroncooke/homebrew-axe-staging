@@ -13,6 +13,21 @@ class Axe < Formula
     bin.install_symlink libexec/"axe"
   end
 
+  def post_install
+    ohai "Ad-hoc signing AXe binary and frameworks for execution"
+    machos = Dir.glob("#{libexec}/**/*").select do |f|
+      File.file?(f) && `file -b "#{f}"`.include?("Mach-O")
+    end
+
+    machos.each do |path|
+      system "codesign", "--force", "--sign", "-", path
+    end
+
+    Dir.glob("#{libexec}/Frameworks/*.framework").each do |framework|
+      system "codesign", "--force", "--sign", "-", "--deep", framework
+    end
+  end
+
   test do
     assert_match "USAGE: axe", shell_output("#{bin}/axe --help", 2)
   end
