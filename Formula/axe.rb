@@ -4,7 +4,7 @@ class Axe < Formula
 
   version "1.2.1-staging"
   url "https://github.com/cameroncooke/AXe/releases/download/v1.2.1-staging/AXe-macOS-homebrew-v1.2.1-staging.tar.gz"
-  sha256 "a640cb20e13a819effc0d371d49b3dae9025fdec0860d0f63a7cd620ccf237de"
+  sha256 "ba91bdecd6b89f352ce514fc595946ac4fc245dda9392f9da608aef6cae029c1"
 
   depends_on macos: :sonoma
 
