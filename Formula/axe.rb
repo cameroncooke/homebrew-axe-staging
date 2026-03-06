@@ -1,33 +1,27 @@
 class Axe < Formula
-  desc "CLI application for macOS to interact with iOS Simulators and Devices via IDB"
+  desc "CLI tool for interacting with iOS Simulators via accessibility and HID APIs"
   homepage "https://github.com/cameroncooke/AXe"
-
-  version "1.2.1-staging"
-  url "https://github.com/cameroncooke/AXe/releases/download/v1.2.1-staging/AXe-macOS-homebrew-v1.2.1-staging.tar.gz"
-  sha256 "ba91bdecd6b89f352ce514fc595946ac4fc245dda9392f9da608aef6cae029c1"
-
+  license "MIT"
+  version "0.0.0-staging.10"
   depends_on macos: :sonoma
 
+  url "https://github.com/cameroncooke/AXe/releases/download/staging-main-10-966de09/AXe-macOS-homebrew-staging-main-10-966de09.tar.gz"
+  sha256 "b1006876c0752b4fbfaddc26a93731d58cd84187b1c0e0fcd603aa3f469be234"
+
   def install
-    libexec.install Dir["*"]
-    bin.install_symlink libexec/"axe"
+    libexec.install "axe", "Frameworks", "AXe_AXe.bundle"
+    bin.write_exec_script libexec/"axe"
   end
 
   def post_install
-    ohai "Ad-hoc signing AXe binary and frameworks for execution"
-    # Sign the main binary.
-    system("codesign", "--force", "--sign", "-", "--timestamp=none", "#{libexec}/axe") || opoo("codesign failed for axe")
-
-    # Sign framework binaries directly (avoid bundle ambiguity); ignore errors but log.
     Dir.glob("#{libexec}/Frameworks/*.framework").each do |framework|
-      name = File.basename(framework, ".framework")
-      binary = Dir["#{framework}/Versions/*/#{name}"].first
-      next unless binary
-      system("codesign", "--force", "--sign", "-", "--timestamp=none", binary) || opoo("codesign failed for #{binary}")
+      system "codesign", "--force", "--sign", "-", "--timestamp=none", framework
     end
+
+    system "codesign", "--force", "--sign", "-", "--timestamp=none", libexec/"axe"
   end
 
   test do
-    assert_match "USAGE: axe", shell_output("#{bin}/axe --help", 2)
+    assert_match version.to_s, shell_output("#{bin}/axe --version")
   end
 end
