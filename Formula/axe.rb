@@ -2,11 +2,11 @@ class Axe < Formula
   desc "CLI tool for interacting with iOS Simulators via accessibility and HID APIs"
   homepage "https://github.com/cameroncooke/AXe"
   license "MIT"
-  version "0.0.0-staging.28"
+  version "0.0.0-staging.31"
   depends_on macos: :sonoma
 
-  url "https://github.com/cameroncooke/AXe/releases/download/staging-main-28-cf2c344/AXe-macOS-homebrew-staging-main-28-cf2c344.tar.gz"
-  sha256 "762a3cdebab444b4aee724cc4e051de6d018355d7ed82907cc88dc5558642afe"
+  url "https://github.com/cameroncooke/AXe/releases/download/staging-main-31-510d4df/AXe-macOS-homebrew-staging-main-31-510d4df.tar.gz"
+  sha256 "a17466c2d92e14ed7ab59565045be170b3a780943cd93340881bf38c6c5ad259"
 
   def install
     libexec.install "axe", "Frameworks", "AXe_AXe.bundle"
